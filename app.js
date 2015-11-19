@@ -46,6 +46,7 @@ function audioCheck() {
   video.muted = true;
   // Tooggle state
   includeMic = !includeMic;
+  console.log('Audio =', includeMic)
 
   if (includeMic){
     if (document.getElementById("Audio").checked){
@@ -62,6 +63,8 @@ function audioCheck() {
 
 function recordDesktop(stream) {
   // Start Window picker with Desktop constraints
+  recordedChunks = [];
+  numrecordedChunks = 0;
   window.resizeTo(646, 565);
   pending_request_id = chrome.desktopCapture.chooseDesktopMedia(
       ["screen"], onAccessApproved);
@@ -71,6 +74,9 @@ function recordDesktop(stream) {
 
 function recordCamera(stream) {
 
+  recordedChunks = [];
+  numrecordedChunks = 0;
+  
   navigator.webkitGetUserMedia({
       audio:false,
       video: { mandatory: { minWidth:1280,
@@ -80,6 +86,9 @@ function recordCamera(stream) {
 
 
 function recordWindow(stream) {
+  
+  recordedChunks = [];
+  numrecordedChunks = 0;
  // Start Window picker with Desktop constraints
   window.resizeTo(646, 565);
   pending_request_id = chrome.desktopCapture.chooseDesktopMedia(
@@ -176,9 +185,17 @@ function gotMediaStream(stream) {
   
   startTime = window.performance.now();
   var videoTracks = localStream.getVideoTracks();
+  //var audioTracks = localStream.getAudioTracks();
+
+  console.log('Checking audio')
+  
   if(includeMic){
+    console.log('Adding audio track')
     var audioTracks = audioStream.getAudioTracks();
     localStream.addTrack(audioTracks[0]);
+  }
+  else{
+    console.log('Not adding audio track')
   }
   if (videoTracks.length > 0) {
     
