@@ -204,7 +204,7 @@ function gotMediaStream(stream) {
 
   try {
     console.log("Trying");
-    recorder = new MediaRecorder(stream, "video/vp8");
+    recorder = new MediaRecorder(stream);
   } catch (e) {
     console.assert(false, 'Exception while creating MediaRecorder: ' + e);
     return;
