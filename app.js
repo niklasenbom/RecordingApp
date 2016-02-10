@@ -121,13 +121,11 @@ function createButton(id, text, onClick) {
 }
 
 function recorderOnDataAvailable(event) {
-  if (event)
-    console.assert(event.data.length > 0, 'Recorded data size should be > 0',event.data.length);
-  console.assert(recorder.state == "recording", "State should be 'recording'");
+ if (event.data && event.data.size > 0) {
+    recordedChunks.push(event.data);
+    numrecordedChunks += event.data.byteLength;
+  }
 
-  // Use |byteLength| instead of |length| for event.data;
-  recordedChunks.push(event.data);
-  numrecordedChunks += event.data.byteLength;
 }
 
 function saveByteArray(data, name) {
@@ -139,7 +137,10 @@ function saveByteArray(data, name) {
   a.href = url;
   a.download = name;
   a.click();
-  URL.revokeObjectURL(url);
+  setTimeout(function() {
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }, 100);
 }
 
 function stopStreamsAndPlaybackData() {
@@ -164,7 +165,7 @@ function stopStreamsAndDownloadData() {
   recorder.stop();
   localStream.getVideoTracks()[0].stop();
   
-  saveByteArray(recordedChunks, 'test.webm')();
+  saveByteArray(recordedChunks, 'test.webm');
   
 
 }
