@@ -13,12 +13,14 @@ var recordedChunks = [];
 var numrecordedChunks = 0;
 var recorder;
 var includeMic = false;
+var includeSysAudio = false;
 
 document.querySelector('#recDesktop').addEventListener('click', recordDesktop);
 document.querySelector('#recCamera').addEventListener('click', recordCamera);
 document.querySelector('#recWindow').addEventListener('click', recordWindow);
-//document.querySelector('#recTab').addEventListener('click', recordTab);
+document.querySelector('#recTab').addEventListener('click', recordTab);
 document.querySelector('#Audio').addEventListener('click', audioCheck);
+document.querySelector('#sysAudio').addEventListener('click', sysAudioCheck);
 document.querySelector('#recStop').addEventListener('click', stopStreamsAndDownloadData);
 
 
@@ -26,6 +28,7 @@ function greyOutButtons(){
   document.querySelector('#recDesktop').disabled=true;
   document.querySelector('#recCamera').disabled=true;
   document.querySelector('#recWindow').disabled=true;
+  document.querySelector('#recTab').disabled=true;
   document.querySelector('#recStop').hidden=false;
 }
 
@@ -34,12 +37,14 @@ function enableButtons(){
   document.querySelector('#recDesktop').disabled=false;
   document.querySelector('#recCamera').disabled=false;
   document.querySelector('#recWindow').disabled=false;
+  document.querySelector('#recTab').disabled=false;
   document.querySelector('#recStop').hidden=true;
 }
 
 function audioCheck() {
 
-  // this won't work in extension
+  includeSysAudio = false;
+  document.querySelector('#sysAudio').checked =false;
   
   // Mute video so we don't play loopback audio
   var video = document.querySelector("video");
@@ -60,14 +65,27 @@ function audioCheck() {
 
 };
 
+function sysAudioCheck() {
+
+  includeSysAudio = !includeSysAudio;
+  includeMic = false;
+  document.querySelector('#Audio').checked =false;
+  console.log('System Audio =', includeSysAudio)
+
+};
+
+
 
 function recordDesktop(stream) {
   // Start Window picker with Desktop constraints
   recordedChunks = [];
   numrecordedChunks = 0;
   window.resizeTo(646, 565);
+  sourceType = ["screen"];
+  if (includeSysAudio)
+    sourceType[1] = "audio"; 
   pending_request_id = chrome.desktopCapture.chooseDesktopMedia(
-      ["screen"], onAccessApproved);
+      sourceType, onAccessApproved);
 
 };
 
@@ -91,6 +109,7 @@ function recordWindow(stream) {
   numrecordedChunks = 0;
  // Start Window picker with Desktop constraints
   window.resizeTo(646, 565);
+
   pending_request_id = chrome.desktopCapture.chooseDesktopMedia(
       ["window"], onAccessApproved);
 
@@ -100,7 +119,16 @@ function recordWindow(stream) {
 
 
 function recordTab(stream) {
-  // Invoke Tab Capture API
+  recordedChunks = [];
+  numrecordedChunks = 0;
+ // Start Window picker with Desktop constraints
+  window.resizeTo(646, 565);
+
+  sourceType = ["tab"];
+  if (includeSysAudio)
+    sourceType[1] = "audio"; 
+  pending_request_id = chrome.desktopCapture.chooseDesktopMedia(
+      sourceType, onAccessApproved);
 };
 
 
@@ -194,6 +222,13 @@ function gotMediaStream(stream) {
     console.log('Adding audio track')
     var audioTracks = audioStream.getAudioTracks();
     localStream.addTrack(audioTracks[0]);
+  }
+  if(includeSysAudio){
+    console.log('Adding system audio track')
+    var audioTracks = stream.getAudioTracks();
+    if (audioTracks.length > 0) {
+      console.log('No audio track in screen stream')
+    }
   }
   else{
     console.log('Not adding audio track')
