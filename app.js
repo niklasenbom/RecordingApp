@@ -21,7 +21,9 @@ document.querySelector('#recWindow').addEventListener('click', recordWindow);
 document.querySelector('#recTab').addEventListener('click', recordTab);
 document.querySelector('#Audio').addEventListener('click', audioCheck);
 document.querySelector('#sysAudio').addEventListener('click', sysAudioCheck);
-document.querySelector('#recStop').addEventListener('click', stopStreamsAndDownloadData);
+document.querySelector('#recStop').addEventListener('click', stopRecording);
+document.querySelector('#playButton').addEventListener('click', play);
+document.querySelector('#downloadButton').addEventListener('click', download);
 
 
 function greyOutButtons(){
@@ -30,6 +32,8 @@ function greyOutButtons(){
   document.querySelector('#recWindow').disabled=true;
   document.querySelector('#recTab').disabled=true;
   document.querySelector('#recStop').hidden=false;
+   document.querySelector('#playButton').hidden=true;
+  document.querySelector('#downloadButton').hidden=true;
 }
 
 function enableButtons(){
@@ -39,6 +43,8 @@ function enableButtons(){
   document.querySelector('#recWindow').disabled=false;
   document.querySelector('#recTab').disabled=false;
   document.querySelector('#recStop').hidden=true;
+  document.querySelector('#playButton').hidden=true;
+  document.querySelector('#downloadButton').hidden=true;
 }
 
 function audioCheck() {
@@ -185,18 +191,34 @@ function stopStreamsAndPlaybackData() {
 }
 
 
-function stopStreamsAndDownloadData() {
+function stopRecording() {
   //document.getElementById("btn").disabled = true;
   //document.getElementById("btn2").disabled = true;
   console.log('Stopping record and starting download');
   enableButtons();
+  document.querySelector('#playButton').hidden=false;
+  document.querySelector('#downloadButton').hidden=false;
   recorder.stop();
   localStream.getVideoTracks()[0].stop();
-  
-  saveByteArray(recordedChunks, 'test.webm');
-  
 
 }
+
+function play() {
+
+  var blob = new Blob(recordedChunks, {type: "video/webm"});
+  video.src = window.URL.createObjectURL(blob);
+
+}
+
+function download() {
+  //document.getElementById("btn").disabled = true;
+  //document.getElementById("btn2").disabled = true;
+  console.log('Downloading file');
+  
+  saveByteArray(recordedChunks, 'test.webm');
+
+}
+
 
 function recorderOnStop() {
   console.log('recorderOnStop fired');
