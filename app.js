@@ -226,7 +226,7 @@ function gotMediaStream(stream) {
   if(includeSysAudio){
     console.log('Adding system audio track')
     var audioTracks = stream.getAudioTracks();
-    if (audioTracks.length > 0) {
+    if (audioTracks.length < 1) {
       console.log('No audio track in screen stream')
     }
   }
@@ -276,7 +276,7 @@ function onAccessApproved(id) {
   console.log('Window ID: ', id);
 
   navigator.webkitGetUserMedia({
-      audio:{ optional: { chromeMediaSource: "desktop",
+      audio:{ mandatory: { chromeMediaSource: "desktop",
                             chromeMediaSourceId: id } },
       video: { mandatory: { chromeMediaSource: "desktop",
                             chromeMediaSourceId: id,
