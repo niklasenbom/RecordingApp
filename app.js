@@ -276,7 +276,8 @@ function onAccessApproved(id) {
   console.log('Window ID: ', id);
 
   navigator.webkitGetUserMedia({
-      audio:false,
+      audio:{ optional: { chromeMediaSource: "desktop",
+                            chromeMediaSourceId: id } },
       video: { mandatory: { chromeMediaSource: "desktop",
                             chromeMediaSourceId: id,
                             maxWidth:window.screen.width,
