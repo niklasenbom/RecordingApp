@@ -1,17 +1,13 @@
 {
   "name": "Screen Recorder",
   "description": "Record camera, Desktop, Windows, and tabs",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "manifest_version": 2,
   "minimum_chrome_version": "49",
   "icons": {
     "16": "icon.png",
     "128": "icon.png"
   },
-  //"browser_action": {
-  //  "default_icon": "icon.png",
-  //  "default_popup": "index.html"
-  //},
   "app": {
     "background": {
       "scripts": ["background.js"]

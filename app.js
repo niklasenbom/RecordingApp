@@ -25,6 +25,11 @@ document.querySelector('#recStop').addEventListener('click', stopRecording);
 document.querySelector('#playButton').addEventListener('click', play);
 document.querySelector('#downloadButton').addEventListener('click', download);
 
+if(getChromeVersion() < 51)
+    document.querySelector('#sysAudioLabel').hidden=true;
+
+  if(getChromeVersion() < 53)
+    document.querySelector('#recTab').hidden=true;
 
 function greyOutButtons(){
   document.querySelector('#recDesktop').disabled=true;
@@ -32,7 +37,7 @@ function greyOutButtons(){
   document.querySelector('#recWindow').disabled=true;
   document.querySelector('#recTab').disabled=true;
   document.querySelector('#recStop').hidden=false;
-   document.querySelector('#playButton').hidden=true;
+  document.querySelector('#playButton').hidden=true;
   document.querySelector('#downloadButton').hidden=true;
 }
 
@@ -45,6 +50,13 @@ function enableButtons(){
   document.querySelector('#recStop').hidden=true;
   document.querySelector('#playButton').hidden=true;
   document.querySelector('#downloadButton').hidden=true;
+  
+}
+
+function getChromeVersion () {     
+    var raw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+
+    return raw ? parseInt(raw[2], 10) : false;
 }
 
 function audioCheck() {
