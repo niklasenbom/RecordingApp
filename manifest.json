@@ -1,7 +1,7 @@
 {
   "name": "Screen Recorder",
   "description": "Record camera, Desktop, Windows, and tabs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "manifest_version": 2,
   "minimum_chrome_version": "49",
   "icons": {

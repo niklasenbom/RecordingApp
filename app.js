@@ -85,6 +85,10 @@ function audioCheck() {
 
 function sysAudioCheck() {
 
+  // Mute video so we don't play loopback audio
+  var video = document.querySelector("video");
+  video.muted = true;
+
   includeSysAudio = !includeSysAudio;
   includeMic = false;
   document.querySelector('#Audio').checked =false;
@@ -216,6 +220,10 @@ function stopRecording() {
 }
 
 function play() {
+
+  // Unmute video 
+  var video = document.querySelector("video");
+  video.muted = false;
 
   var blob = new Blob(recordedChunks, {type: "video/webm"});
   video.src = window.URL.createObjectURL(blob);
