@@ -250,7 +250,12 @@ function gotMediaStream(stream) {
   var video = document.querySelector("video");
   video.src = URL.createObjectURL(stream);
   localStream = stream;
-  stream.onended = function() { console.log("Ended"); };
+  stream.getTracks().forEach(function(track) {
+    track.addEventListener('ended', function() {
+      console.log(stream.id, 'track ended', track.kind, track.id);
+      stopRecording();
+    });
+  });
 
 
   
@@ -300,7 +305,11 @@ function gotMediaStream(stream) {
 function gotAudio(stream) {
   console.log("Received audio stream");
   audioStream = stream;
-  stream.onended = function() { console.log("Audio Ended"); };
+  stream.getTracks().forEach(function(track) {
+    track.addEventListener('ended', function() {
+      console.log(stream.id, 'track ended', track.kind, track.id);
+    });
+  });
 
 };
 
